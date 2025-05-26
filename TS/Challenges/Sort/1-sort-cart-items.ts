@@ -69,6 +69,40 @@ function sortCartItems (cart: CartItem[]) : CartItem[] {
 
 //#endregion Solution
 
+//#region tests
+function runTest(description: string, testFn: () => void) {
+   try {
+     testFn();
+     console.log(`✅ ${description}`);
+   } catch (error) {
+     console.error(`❌ ${description}`);
+     console.error(error);
+   }
+ };
+ function expectEqual(actual: any, expected: any) {
+   const a = JSON.stringify(actual);
+   const e = JSON.stringify(expected);
+   if (a !== e) {
+     throw new Error(`Expected: ${e}, but got: ${a}`);
+   }
+ };
+ runTest('TEST - sorts by priority descending', () => {
+   const input: CartItem[] = [...cart];
+   const result = sortCartItems([...input]).map(i => i.sku);
+   const expected = ['002', '003', '004', '001', '005'];
+   expectEqual(result, expected);
+ });
+ runTest('TEST - sorts by type when priorities are equal', () => {
+   const result = sortCartItems([...cart]).map(i => i.priority);
+   const expected = [3,3,2,2,1];
+   expectEqual(result, expected);
+ });
+ 
+ 
+//#endregion tests
+
 console.table(sortCartItems(cart))
+
+
 
 
