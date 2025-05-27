@@ -1,3 +1,5 @@
+import test from '../../Utils/testHelpers'
+ 
 //#region Task
 /**
  * Challenge 2: Building a Category Tree from Flat Data
@@ -89,32 +91,54 @@ type Category = {
   //#endregion DB
   
 //#region Solution
-function buildCategoryTree(categories: Category[]): CategoryNode[] {
+function buildCategoryTree (categories: Category[]): CategoryNode[]  {
+  
+// crate map id to node
+const map = new Map<number, CategoryNode>() 
+const roots: CategoryNode [] = []
 
-  const root: CategoryNode[] = []
-  const map = new Map<number, CategoryNode>()
+// add to map - itterate through cat and crate roots
+for (const cat of categories) {
+  map.set(cat.id, {...cat, children: []})
+}
 
-  for (const cat of categories){
-    map.set(cat.id, {id: cat.id, name: cat.name, children: []})
+// add nodes to root - itterate through cat
+for (const cat of categories) {
+  const node = map.get(cat.id)!
+  if ( cat.parentId === null) {
+    roots.push(node) ;
+  } else {
+    const parent = map.get(cat.parentId)!
+    if (parent) { parent.children.push(node)} 
   }
+}
 
-  for (const cat of categories){
-    const node = map.get(cat.id)!
-    if (cat.parentId === null){
-      root.push(node)
-    } else {
-      const parent = map.get(cat.parentId)
-      if (parent){
-        parent.children.push(node)
-      }
-    }
-  }
-
-  return root
-
+  return roots
 }
 
 //#endregion Solution
   
-console.dir(buildCategoryTree(categories), { depth: null });
+// console.dir(buildCategoryTree(categories), { depth: null });
+
+//#region tests
+test.runTest('builds category tree with correct root nodes', () => {
+  const result = buildCategoryTree([...categories]);
+
+  const actualRootNames = result.map(node => node.name).sort();
+  const expectedRootNames = ['Accessories', 'Electronics'];
+
+  test.expectEqual(actualRootNames, expectedRootNames);
+});
+test.runTest('builds correct tree structure for Electronics → Phones → Smartphones → Android Phones', () => {
+  const tree = buildCategoryTree([...categories]);
+  const electronics = tree.find(cat => cat.name === 'Electronics')!;
+  const phones = electronics.children.find(cat => cat.name === 'Phones')!;
+  const smartphones = phones.children.find(cat => cat.name === 'Smartphones')!;
+  const android = smartphones.children.find(cat => cat.name === 'Android Phones')!;
+
+  test.expectEqual(android.name, 'Android Phones');
+  test.expectEqual(android.children.length, 0);
+});
+
+//#endregion tests
   
