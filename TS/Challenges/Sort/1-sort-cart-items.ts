@@ -1,5 +1,6 @@
 
-import test from '../../Utils/testHelpers'
+import testUtils from '../../utils/testHelpers'
+
 //#region task
 /**
  * Challenge 1: Sorting Cart Items by Priority and Type
@@ -73,16 +74,16 @@ function sortCartItems (cart: CartItem[]) : CartItem[] {
 
 //#region tests
 
- test.runTest('TEST - sorts by priority descending', () => {
+testUtils.runTest('TEST - sorts by priority descending', () => {
    const input: CartItem[] = [...cart];
    const result = sortCartItems([...input]).map(i => i.sku);
    const expected = ['002', '003', '004', '001', '005'];
-   test.expectEqual(result, expected);
+   testUtils.expectEqual(result, expected);
  });
- test.runTest('TEST - sorts by type when priorities are equal', () => {
+ testUtils.runTest('TEST - sorts by type when priorities are equal', () => {
    const result = sortCartItems([...cart]).map(i => i.priority);
    const expected = [3,3,2,2,1];
-   test.expectEqual(result, expected);
+   testUtils.expectEqual(result, expected);
  });
  
  
