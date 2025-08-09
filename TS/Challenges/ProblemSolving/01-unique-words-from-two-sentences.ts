@@ -31,22 +31,24 @@ const sentence2 = "banana orange mango";
 
 //#region Solution
 
-function uniqueWords (sentence1: string, sentence2: string): string[] {
-  const allWords = (sentence1 + ' ' + sentence2).split(' ');
-  const countMap = new Map<string, number> ()
-
+function uniqueWords (sentence1: string, sentence2: string): string[]  {
+   // Combine the two sentences into one
+   const allWords: string[] = (sentence1 + ' ' + sentence2).split(' ');
+   // create map to store word-to-count
+   const wortToCountMap = new Map<string, number>();
+   // itterate through words and map them to count
   for (const word of allWords) {
-    countMap.set( word , ( countMap.get(word) || 0 ) + 1)
+    wortToCountMap.set(word, (wortToCountMap.get(word) || 0) + 1)
   }
-
-  const result: string [] = [];
-  for (const [word, freq] of countMap.entries()) {
+   // filter the map to get words with count 1
+   const result: string[] = [];
+   for (const [word, freq] of wortToCountMap.entries()){
     if (freq === 1) {
       result.push(word);
     }
-  }
-  
-  return result;
+   }
+
+   return result;
 }
 
 //#endregion Solution
